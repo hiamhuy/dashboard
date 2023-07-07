@@ -11,7 +11,7 @@ if (window.innerWidth < 768) {
 
 const navLinks = document.querySelectorAll(".item-link li");
 const iconShowNav = document.querySelector(".icon i");
-const listLinkChild = document.querySelector(".child-link");
+const listLinkChild = document.querySelectorAll(".child-link li");
 
 // function showListLink() {
 // 	iconShowNav.addEventListener("click", () => {
@@ -29,5 +29,13 @@ navLinks.forEach((link) => {
 		});
 		link.classList.add("active");
 		// showListLink();
+	});
+});
+listLinkChild.forEach((child) => {
+	child.addEventListener("click", () => {
+		listLinkChild.forEach((_child) => {
+			_child.classList.remove("active-child");
+		});
+		child.classList.add("active-child");
 	});
 });
