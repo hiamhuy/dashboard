@@ -8,7 +8,6 @@ toggle.addEventListener("click", () => {
 if (window.innerWidth < 768) {
 	nav.classList.add("mini-sidebar");
 }
-
 const navLinks = document.querySelectorAll(".item-link li");
 const iconShowNav = document.querySelector(".icon i");
 const listLinkChild = document.querySelectorAll(".child-link li");
@@ -39,3 +38,57 @@ listLinkChild.forEach((child) => {
 		child.classList.add("active-child");
 	});
 });
+
+//Header
+const action = ".action";
+const classAction = document.querySelector(action);
+const boxProfile = document.querySelector(".profile");
+boxProfile.addEventListener("click", () => {
+	setTimeout(() => {
+		if (!classAction.classList.contains("active")) {
+			classAction.classList.add("active");
+		}
+	}, 0);
+});
+document.addEventListener("click", (e) => {
+	const isClosest = e.target.closest(action);
+	if (!isClosest && classAction.classList.contains("active")) {
+		classAction.classList.remove("active");
+	}
+});
+
+//Sidebar Menu
+class MenuItem {
+	id;
+	parentId;
+	icon;
+	title;
+	route;
+	isCollapsed;
+	children = [MenuItem];
+
+	constructor(id, parentId, icon, title, route, isCollapsed, children) {
+		this.id = id;
+		this.parentId = parentId;
+		this.icon = icon;
+		this.title = title;
+		this.route = route;
+		this.isCollapsed = isCollapsed;
+		this.children = children;
+	}
+}
+
+function getMenuItems() {
+	return [
+		new MenuItem("1", "", "a", "title", "/", "", "", []),
+		new MenuItem("2", "", "b", "title", "/", "", "", [
+			new MenuItem("1", "2", "ba", "test1", "/", ""),
+			new MenuItem("2", "2", "c", "test2", "/"),
+		]),
+		new MenuItem("3", "", "c", "title", "/", "", "", []),
+		new MenuItem("4", "", "d", "title", "/", "", "", []),
+		new MenuItem("5", "", "e", "title", "/", "", "", []),
+	];
+}
+let arr = getMenuItems();
+console.log("arr", arr);
