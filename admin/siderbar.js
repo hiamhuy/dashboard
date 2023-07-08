@@ -1,12 +1,12 @@
-const toggle = document.querySelector(".toggle-nav i");
-const nav = document.getElementById("siderbar");
+const toggle = document.querySelector(".toggle-nav");
+const nav = document.getElementById("sidebar");
 
 toggle.addEventListener("click", () => {
-	nav.classList.toggle("mini-siderbar");
+	nav.classList.toggle("mini-sidebar");
 });
 
 if (window.innerWidth < 768) {
-	nav.classList.add("mini-siderbar");
+	nav.classList.add("mini-sidebar");
 }
 
 const navLinks = document.querySelectorAll(".item-link li");
