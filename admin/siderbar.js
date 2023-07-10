@@ -8,36 +8,153 @@ toggle.addEventListener("click", () => {
 if (window.innerWidth < 768) {
 	nav.classList.add("mini-sidebar");
 }
-const navLinks = document.querySelectorAll(".item-link li");
-const iconShowNav = document.querySelector(".icon i");
-const listLinkChild = document.querySelectorAll(".child-link li");
 
-// function showListLink() {
-// 	iconShowNav.addEventListener("click", () => {
-// 		if (listLinkChild.classList.contains("block")) {
-// 			listLinkChild.classList.remove("block");
-// 		} else {
-// 			listLinkChild.classList.add("block");
-// 		}
-// 	});
-// }
-navLinks.forEach((link) => {
-	link.addEventListener("click", () => {
-		navLinks.forEach((l) => {
-			l.classList.remove("active");
+function activeLink() {
+	const navLinks = document.querySelectorAll(".item-link li");
+	const navLinkHasChild = document.querySelectorAll("li.has-child");
+	const listLinkChild = document.querySelectorAll(".child-link li");
+
+	const windowPathNameUrl = window.location.pathname;
+	console.log("windowPathNameUrl", windowPathNameUrl);
+
+	navLinks.forEach((link) => {
+		var getTagNameAs = link.querySelectorAll(".name-link a");
+		getTagNameAs.forEach((route) => {
+			// if (route != null) {
+			const _pathNameUrl = new URL(route.href).pathname;
+			if (windowPathNameUrl == _pathNameUrl || (windowPathNameUrl == "void(0)" && _pathNameUrl == "void(0)")) {
+				link.classList.add("active");
+			}
+			//}
 		});
-		link.classList.add("active");
-		// showListLink();
 	});
-});
-listLinkChild.forEach((child) => {
-	child.addEventListener("click", () => {
-		listLinkChild.forEach((_child) => {
-			_child.classList.remove("active-child");
+	navLinkHasChild.forEach((child) => {
+		child.addEventListener("click", () => {
+			navLinks.forEach((l) => {
+				l.classList.remove("active");
+			});
+			child.classList.add("active");
 		});
-		child.classList.add("active-child");
 	});
-});
+	listLinkChild.forEach((child) => {
+		var getTagNameAChild = child.querySelectorAll("a");
+
+		getTagNameAChild.forEach((r) => {
+			const _pathNameChildUrl = new URL(r.href).pathname;
+			if (
+				windowPathNameUrl == _pathNameChildUrl ||
+				(windowPathNameUrl == "void(0)" && _pathNameChildUrl == "void(0)")
+			) {
+				child.classList.add("active-child");
+			}
+			checkActive();
+		});
+	});
+}
+
+function checkActive() {
+	const navLinkHasChild = document.querySelectorAll("li.has-child");
+	const listLinkChild = document.querySelectorAll(".child-link li");
+	listLinkChild.forEach((child) => {
+		if (child.classList.contains("active-child")) {
+			navLinkHasChild.forEach((_child) => {
+				_child.classList.add("active");
+			});
+		}
+	});
+}
+
+//Sidebar Menu
+class MenuItem {
+	id;
+	parentId;
+	icon;
+	title;
+	route;
+	children = [MenuItem];
+
+	constructor(id, parentId, icon, title, route, children) {
+		this.id = id;
+		this.parentId = parentId;
+		this.icon = icon;
+		this.title = title;
+		this.route = route;
+		this.children = children;
+	}
+}
+
+function getMenuItems() {
+	return [
+		new MenuItem("1", "", `<i class="fa-solid fa-house"></i>`, "Home", "index.html", []),
+		new MenuItem("2", "", `<i class="fa-solid fa-sliders"></i>`, "Slider", "slider.html", []),
+		new MenuItem("3", "", `<i class="fa-solid fa-newspaper"></i>`, "Newspaper", "newspaper.html", []),
+		new MenuItem("4", "", `<i class="fa-solid fa-cookie-bite"></i>`, "Item", "javascript:void(0)", [
+			new MenuItem("c1", "4", `<i class="fa-solid fa-check"></i>`, "Item1", "item1.html"),
+			new MenuItem("c2", "4", `<i class="fa-solid fa-check"></i>`, "Item2", "item2.html"),
+			new MenuItem("c3", "4", `<i class="fa-solid fa-check"></i>`, "Item3", "javascript:void(0)"),
+			new MenuItem("c3", "4", `<i class="fa-solid fa-check"></i>`, "Item4", "javascript:void(0)"),
+		]),
+		new MenuItem("5", "", `<i class="fa-brands fa-product-hunt"></i>`, "Products", "products.html", []),
+		new MenuItem("6", "", `<i class="fa-solid fa-grip"></i>`, "Grid", "javascript:void(0)", []),
+	];
+}
+let arr = getMenuItems();
+
+function loadMenuItems() {
+	// let countMenu = arr.length;
+	let listMenu = document.querySelector("ul.item-link");
+	listMenu.innerHTML = "";
+
+	arr.forEach((item) => {
+		let newLi = document.createElement("li");
+		let newDiv = document.createElement("div");
+		newDiv.classList.add("name-link");
+		let newA = document.createElement("a");
+		newA.href = item.route;
+		let icon = document.createElement("span");
+		icon.innerHTML = item.icon;
+		let text = document.createElement("span");
+		text.classList.add("text");
+		text.innerText = item.title;
+
+		newA.appendChild(icon);
+		newA.appendChild(text);
+		newDiv.appendChild(newA);
+		newLi.appendChild(newDiv);
+		if (item.children != null && item.children.length > 0) {
+			let ulChilds = document.createElement("ul");
+			let iconDown = document.createElement("span");
+			iconDown.classList.add("icon");
+			iconDown.innerHTML = `<i class="fa-solid fa-angle-down"></i>`;
+			newDiv.appendChild(iconDown);
+			ulChilds.classList.add("child-link");
+			item.children.forEach((child) => {
+				newLi.classList.add("has-child");
+				let liChild = document.createElement("li");
+				let aChild = document.createElement("a");
+				aChild.href = child.route;
+				let spanIcon = document.createElement("span");
+				spanIcon.innerHTML = child.icon;
+				let spanChild = document.createElement("span");
+				spanChild.innerText = child.title;
+
+				aChild.appendChild(spanIcon);
+				aChild.appendChild(spanChild);
+
+				liChild.appendChild(aChild);
+
+				ulChilds.appendChild(liChild);
+
+				newLi.appendChild(ulChilds);
+			});
+		}
+
+		listMenu.appendChild(newLi);
+	});
+}
+
+loadMenuItems();
+activeLink();
 
 //Header
 const action = ".action";
@@ -56,39 +173,3 @@ document.addEventListener("click", (e) => {
 		classAction.classList.remove("active");
 	}
 });
-
-//Sidebar Menu
-class MenuItem {
-	id;
-	parentId;
-	icon;
-	title;
-	route;
-	isCollapsed;
-	children = [MenuItem];
-
-	constructor(id, parentId, icon, title, route, isCollapsed, children) {
-		this.id = id;
-		this.parentId = parentId;
-		this.icon = icon;
-		this.title = title;
-		this.route = route;
-		this.isCollapsed = isCollapsed;
-		this.children = children;
-	}
-}
-
-function getMenuItems() {
-	return [
-		new MenuItem("1", "", "a", "title", "/", "", "", []),
-		new MenuItem("2", "", "b", "title", "/", "", "", [
-			new MenuItem("1", "2", "ba", "test1", "/", ""),
-			new MenuItem("2", "2", "c", "test2", "/"),
-		]),
-		new MenuItem("3", "", "c", "title", "/", "", "", []),
-		new MenuItem("4", "", "d", "title", "/", "", "", []),
-		new MenuItem("5", "", "e", "title", "/", "", "", []),
-	];
-}
-let arr = getMenuItems();
-console.log("arr", arr);

@@ -272,6 +272,9 @@ a {
 	color: var(--color-white);
 	font-size: 15px;
 }
+#sidebar .item-link li.has-child.active .child-link li a i {
+	margin-right: 5px;
+}
 #sidebar .item-link li.has-child.active .child-link li.active-child {
 	font-weight: 600;
 }
@@ -370,7 +373,13 @@ a {
 	margin-left: 10px;
 	border-radius: 50%;
 	border: 1px solid #cccccc;
-	background-color: #cccccc;
+}
+#header-nav .profile .thumb img {
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	background-color: #d60d0d;
+	object-fit: cover;
 }
 #header-nav .action {
 	position: absolute;
